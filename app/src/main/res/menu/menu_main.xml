@@ -4,15 +4,19 @@
     <item
         android:id="@+id/menu_add_column"
         android:icon="@drawable/ic_plus"
-        app:showAsAction="never"
-        android:title="@string/add_column" />
+        android:title="@string/add_column"
+        app:showAsAction="never" />
     <item
         android:id="@+id/menu_remove_column"
         android:icon="@drawable/ic_minus"
-        app:showAsAction="never"
-        android:title="@string/remove_column" />
+        android:title="@string/remove_column"
+        app:showAsAction="never" />
     <item
         android:id="@+id/menu_change_style"
-        app:showAsAction="never"
-        android:title="@string/menu_set_decoration" />
+        android:title="@string/menu_set_decoration"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_set_30_columns"
+        android:title="@string/menu_set_30_columns"
+        app:showAsAction="never" />
 </menu>

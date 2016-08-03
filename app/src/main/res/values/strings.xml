@@ -4,4 +4,5 @@
     <string name="add_column">Add column</string>
     <string name="remove_column">Remove column</string>
     <string name="menu_set_decoration">Set decoration</string>
+    <string name="menu_set_30_columns">BOOM!</string>
 </resources>

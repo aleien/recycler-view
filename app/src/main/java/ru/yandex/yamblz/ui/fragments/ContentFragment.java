@@ -3,8 +3,6 @@ package ru.yandex.yamblz.ui.fragments;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,8 +27,33 @@ public class ContentFragment extends BaseFragment {
 
     private GridLayoutManager layoutManager;
     private ContentAdapter adapter;
-    private boolean decorated;
-    private RecyclerView.ItemDecoration decoration;
+    private boolean isDecorated;
+    private boolean is30ColumnsSet;
+    private RecyclerView.ItemDecoration decoration = new RecyclerView.ItemDecoration() {
+        private Paint paint = new Paint();
+        int borderWidth = 15;
+
+        @Override
+        public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
+            super.onDrawOver(c, parent, state);
+            paint.setColor(Color.WHITE);
+
+            final RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
+
+            for (int i = 0; i < parent.getChildCount(); i++) {
+                final View child = parent.getChildAt(i);
+                if (parent.getChildAdapterPosition(child) % 2 == 0) continue;
+                c.drawRect(
+                        layoutManager.getDecoratedLeft(child),
+                        layoutManager.getDecoratedBottom(child) - Utils.dpToPx(borderWidth),
+                        layoutManager.getDecoratedRight(child),
+                        layoutManager.getDecoratedBottom(child),
+                        paint);
+
+            }
+
+        }
+    };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,7 +77,13 @@ public class ContentFragment extends BaseFragment {
                 setSpanCount(layoutManager.getSpanCount() - 1);
                 return true;
             case R.id.menu_change_style:
-                setItemDecoration(!decorated);
+                setItemDecoration(!isDecorated);
+                return true;
+            case R.id.menu_set_30_columns:
+                setSpanCount(is30ColumnsSet ? 1 : 30);
+                rv.getRecycledViewPool().setMaxRecycledViews(0, is30ColumnsSet ? 5 : 300);
+                is30ColumnsSet = !is30ColumnsSet;
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -80,50 +109,31 @@ public class ContentFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         layoutManager = new AnimatedGridLayoutManager(getContext(), 1);
-        adapter = new ContentAdapter();
         rv.setLayoutManager(layoutManager);
         rv.setHasFixedSize(true);
-        adapter.setHasStableIds(true);
-        rv.setAdapter(adapter);
-        decoration = new RecyclerView.ItemDecoration() {
-            private Paint paint = new Paint();
-            int borderWidth = 15;
 
-            @Override
-            public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
-                super.onDrawOver(c, parent, state);
-                paint.setColor(Color.WHITE);
 
-                final RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
+        setupAdapter();
+        setupItemTouchHelper();
+    }
 
-                for (int i = 0; i < parent.getChildCount(); i++) {
-                    final View child = parent.getChildAt(i);
-                    if (parent.getChildAdapterPosition(child) % 2 == 0) continue;
-                    c.drawRect(
-                            layoutManager.getDecoratedLeft(child),
-                            layoutManager.getDecoratedBottom(child) - Utils.dpToPx(borderWidth),
-                            layoutManager.getDecoratedRight(child),
-                            layoutManager.getDecoratedBottom(child),
-                            paint);
-
-                }
-
-            }
-        };
-
-//        rv.addItemDecoration(decoration);
-
+    private void setupItemTouchHelper() {
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelper(adapter);
         ItemTouchHelper helper = new ItemTouchHelper(callback);
         helper.attachToRecyclerView(rv);
+    }
 
-//        rv.setItemAnimator(new RotateItemAnimator());
+    private void setupAdapter() {
+        adapter = new ContentAdapter();
+        adapter.setHasStableIds(true);
+        rv.setAdapter(adapter);
     }
 
     public void setItemDecoration(boolean itemDecoration) {
-        this.decorated = itemDecoration;
-        if (decorated) {
+        this.isDecorated = itemDecoration;
+        if (isDecorated) {
             rv.addItemDecoration(decoration);
         } else {
             rv.removeItemDecoration(decoration);
