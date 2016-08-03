@@ -55,6 +55,12 @@ class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentHolder> 
         return colors.get(position);
     }
 
+    // Derp
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
     public void swap(int firstPosition, int secondPosition){
         Collections.swap(colors, firstPosition, secondPosition);
         notifyItemMoved(firstPosition, secondPosition);

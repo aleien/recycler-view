@@ -1,6 +1,7 @@
 package ru.yandex.yamblz.ui.fragments;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -10,7 +11,7 @@ import android.view.View;
  * Created by aleien on 31.07.16.
  */
 
-class SimpleItemTouchHelper extends  ItemTouchHelper.SimpleCallback  {
+class SimpleItemTouchHelper extends ItemTouchHelper.SimpleCallback {
     private final ContentAdapter adapter;
     private Paint p = new Paint();
 
@@ -30,4 +31,20 @@ class SimpleItemTouchHelper extends  ItemTouchHelper.SimpleCallback  {
         adapter.remove(viewHolder.getAdapterPosition());
     }
 
+    @Override
+    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+            View itemView = viewHolder.itemView;
+            float threshold = getSwipeThreshold(viewHolder);
+
+            Paint p = new Paint();
+            int alpha = Math.min(255, (int) (255 * dX / (threshold * recyclerView.getWidth())));
+            p.setARGB(alpha, 255, 0, 0);
+            c.drawRect((float) itemView.getLeft(), (float) itemView.getTop(), (float) itemView.getLeft() + dX,
+                    (float) itemView.getBottom(), p);
+
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        }
+    }
 }
