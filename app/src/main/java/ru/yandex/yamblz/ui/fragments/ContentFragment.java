@@ -1,14 +1,11 @@
 package ru.yandex.yamblz.ui.fragments;
 
-import android.animation.Animator;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
@@ -21,7 +18,6 @@ import android.view.ViewGroup;
 import butterknife.BindView;
 import ru.yandex.yamblz.R;
 import ru.yandex.yamblz.utils.Utils;
-import timber.log.Timber;
 
 public class ContentFragment extends BaseFragment {
 
@@ -34,9 +30,9 @@ public class ContentFragment extends BaseFragment {
     private boolean is30ColumnsSet;
     private boolean isAnimated;
 
-    private RecyclerView.ItemDecoration decoration = new RecyclerView.ItemDecoration() {
-        private Paint paint = new Paint();
-        int borderWidth = 15;
+    private final RecyclerView.ItemDecoration decoration = new RecyclerView.ItemDecoration() {
+        private final Paint paint = new Paint();
+        private final int borderWidth = 15;
 
         @Override
         public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
@@ -112,11 +108,6 @@ public class ContentFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-    }
-
-    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -140,7 +131,7 @@ public class ContentFragment extends BaseFragment {
         rv.setAdapter(adapter);
     }
 
-    public void setItemDecoration(boolean itemDecoration) {
+    private void setItemDecoration(boolean itemDecoration) {
         this.isDecorated = itemDecoration;
         if (isDecorated) {
             rv.addItemDecoration(decoration);
