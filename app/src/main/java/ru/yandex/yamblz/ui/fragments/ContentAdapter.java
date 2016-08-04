@@ -1,6 +1,8 @@
 package ru.yandex.yamblz.ui.fragments;
 
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentHolder> 
 
     private final Random rnd = new Random();
     private final List<Integer> colors = new ArrayList<>();
+    private Pair<Integer, Integer> lastMovedItems = new Pair<>(-1, -1);
 
     @Override
     public ContentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -34,6 +37,8 @@ class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentHolder> 
             if (holder.getAdapterPosition() != NO_POSITION)
                 updateColorForPosition(holder.getAdapterPosition());
         });
+        holder.setIndication(holder.getAdapterPosition() == lastMovedItems.first
+                || holder.getAdapterPosition() == lastMovedItems.second);
     }
 
     @Override
@@ -68,6 +73,8 @@ class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentHolder> 
 
     public void swap(int firstPosition, int secondPosition) {
         Collections.swap(colors, firstPosition, secondPosition);
+        if (firstPosition != secondPosition)
+            lastMovedItems = new Pair<>(firstPosition, secondPosition);
         notifyItemMoved(firstPosition, secondPosition);
     }
 
@@ -95,6 +102,23 @@ class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentHolder> 
 
         void setClickListener(View.OnClickListener listener) {
             this.listener = new WeakReference<>(listener);
+        }
+
+        void setIndication(boolean wasMoved) {
+            if (wasMoved) {
+                ((TextView)itemView).setCompoundDrawablesWithIntrinsicBounds(
+                        null,
+                        null,
+                        ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_moved),
+                        null);
+            } else {
+                ((TextView)itemView).setCompoundDrawables(
+                        null,
+                        null,
+                        null,
+                        null);
+            }
+
         }
 
     }
