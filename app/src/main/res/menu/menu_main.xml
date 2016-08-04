@@ -15,6 +15,11 @@
         android:id="@+id/menu_change_style"
         android:title="@string/menu_set_decoration"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_set_animation"
+        android:title="@string/set_animation"
+        app:showAsAction="never" />
     <item
         android:id="@+id/menu_set_30_columns"
         android:title="@string/menu_set_30_columns"

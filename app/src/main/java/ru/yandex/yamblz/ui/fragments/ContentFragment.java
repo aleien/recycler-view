@@ -1,11 +1,13 @@
 package ru.yandex.yamblz.ui.fragments;
 
+import android.animation.Animator;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -19,16 +21,19 @@ import android.view.ViewGroup;
 import butterknife.BindView;
 import ru.yandex.yamblz.R;
 import ru.yandex.yamblz.utils.Utils;
+import timber.log.Timber;
 
 public class ContentFragment extends BaseFragment {
 
     @BindView(R.id.rv)
     RecyclerView rv;
 
-    private GridLayoutManager layoutManager;
+    private RotateGridLayoutManager layoutManager;
     private ContentAdapter adapter;
     private boolean isDecorated;
     private boolean is30ColumnsSet;
+    private boolean isAnimated;
+
     private RecyclerView.ItemDecoration decoration = new RecyclerView.ItemDecoration() {
         private Paint paint = new Paint();
         int borderWidth = 15;
@@ -82,7 +87,12 @@ public class ContentFragment extends BaseFragment {
             case R.id.menu_set_30_columns:
                 setSpanCount(is30ColumnsSet ? 1 : 30);
                 rv.getRecycledViewPool().setMaxRecycledViews(0, is30ColumnsSet ? 5 : 300);
+                rv.setItemViewCacheSize(is30ColumnsSet ? 5 : 300);
                 is30ColumnsSet = !is30ColumnsSet;
+                return true;
+            case R.id.menu_set_animation:
+                isAnimated = !isAnimated;
+                layoutManager.setAnimated(isAnimated);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -110,10 +120,9 @@ public class ContentFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        layoutManager = new AnimatedGridLayoutManager(getContext(), 1);
+        layoutManager = new RotateGridLayoutManager(getContext(), 1);
         rv.setLayoutManager(layoutManager);
         rv.setHasFixedSize(true);
-
 
         setupAdapter();
         setupItemTouchHelper();

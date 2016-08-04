@@ -7,6 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
+import static android.support.v7.widget.helper.ItemTouchHelper.DOWN;
+import static android.support.v7.widget.helper.ItemTouchHelper.LEFT;
+import static android.support.v7.widget.helper.ItemTouchHelper.RIGHT;
+import static android.support.v7.widget.helper.ItemTouchHelper.UP;
+
 /**
  * Created by aleien on 31.07.16.
  */
@@ -16,7 +21,7 @@ class SimpleItemTouchHelper extends ItemTouchHelper.SimpleCallback {
     private Paint p = new Paint();
 
     SimpleItemTouchHelper(ContentAdapter adapter) {
-        super(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT);
+        super(UP | DOWN | LEFT | RIGHT, RIGHT);
         this.adapter = adapter;
     }
 
@@ -24,6 +29,11 @@ class SimpleItemTouchHelper extends ItemTouchHelper.SimpleCallback {
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
         adapter.swap(viewHolder.getAdapterPosition(), target.getAdapterPosition());
         return true;
+    }
+
+    @Override
+    public void onMoved(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, int fromPos, RecyclerView.ViewHolder target, int toPos, int x, int y) {
+        super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y);
     }
 
     @Override
