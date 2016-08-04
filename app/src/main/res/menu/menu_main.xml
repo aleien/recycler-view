@@ -24,4 +24,8 @@
         android:id="@+id/menu_set_30_columns"
         android:title="@string/menu_set_30_columns"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_set_30_columns_optimized"
+        app:showAsAction="never"
+        android:title="@string/menu_boom_optimized" />
 </menu>

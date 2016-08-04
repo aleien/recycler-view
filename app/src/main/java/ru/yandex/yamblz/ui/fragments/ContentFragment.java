@@ -19,6 +19,8 @@ import butterknife.BindView;
 import ru.yandex.yamblz.R;
 import ru.yandex.yamblz.utils.Utils;
 
+import static ru.yandex.yamblz.utils.Utils.dpToPx;
+
 public class ContentFragment extends BaseFragment {
 
     @BindView(R.id.rv)
@@ -46,7 +48,7 @@ public class ContentFragment extends BaseFragment {
                 if (parent.getChildAdapterPosition(child) % 2 == 0) continue;
                 c.drawRect(
                         layoutManager.getDecoratedLeft(child),
-                        layoutManager.getDecoratedBottom(child) - Utils.dpToPx(borderWidth),
+                        layoutManager.getDecoratedBottom(child) - dpToPx(borderWidth),
                         layoutManager.getDecoratedRight(child),
                         layoutManager.getDecoratedBottom(child),
                         paint);
@@ -81,10 +83,10 @@ public class ContentFragment extends BaseFragment {
                 setItemDecoration(!isDecorated);
                 return true;
             case R.id.menu_set_30_columns:
-                setSpanCount(is30ColumnsSet ? 1 : 30);
-                rv.getRecycledViewPool().setMaxRecycledViews(0, is30ColumnsSet ? 5 : 300);
-                rv.setItemViewCacheSize(is30ColumnsSet ? 5 : 300);
-                is30ColumnsSet = !is30ColumnsSet;
+                setup30Columns(false, -1, 5);
+                return true;
+            case R.id.menu_set_30_columns_optimized:
+                setup30Columns(true, dpToPx(500), is30ColumnsSet ? 5 : 300);
                 return true;
             case R.id.menu_set_animation:
                 isAnimated = !isAnimated;
@@ -92,6 +94,15 @@ public class ContentFragment extends BaseFragment {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setup30Columns(boolean hasFixedSize, int extraLayoutSpace, int max) {
+        setSpanCount(is30ColumnsSet ? 1 : 30);
+        rv.setHasFixedSize(hasFixedSize);
+        layoutManager.setExtraLayoutSpace(extraLayoutSpace);
+        rv.getRecycledViewPool().setMaxRecycledViews(0, max);
+        rv.setItemViewCacheSize(max);
+        is30ColumnsSet = !is30ColumnsSet;
     }
 
     private void setSpanCount(int spanCount) {
@@ -113,7 +124,6 @@ public class ContentFragment extends BaseFragment {
 
         layoutManager = new RotateGridLayoutManager(getContext(), 1);
         rv.setLayoutManager(layoutManager);
-        rv.setHasFixedSize(true);
 
         setupAdapter();
         setupItemTouchHelper();

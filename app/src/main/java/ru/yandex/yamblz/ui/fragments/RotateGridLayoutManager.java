@@ -5,12 +5,10 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import ru.yandex.yamblz.utils.Utils;
-
 
 class RotateGridLayoutManager extends GridLayoutManager {
-    private static final int DEFAULT_EXTRA_LAYOUT_SPACE = Utils.dpToPx(500);
     private boolean isAnimated;
+    private int extraLayoutSpace = -1;
 
     RotateGridLayoutManager(Context context, int spanCount) {
         super(context, spanCount);
@@ -42,8 +40,13 @@ class RotateGridLayoutManager extends GridLayoutManager {
         }
     }
 
+    void setExtraLayoutSpace(int extraLayoutSpace) {
+        this.extraLayoutSpace = extraLayoutSpace;
+    }
+
     @Override
     protected int getExtraLayoutSpace(RecyclerView.State state) {
-        return DEFAULT_EXTRA_LAYOUT_SPACE;
+        if (extraLayoutSpace > 0) return extraLayoutSpace;
+        return super.getExtraLayoutSpace(state);
     }
 }
