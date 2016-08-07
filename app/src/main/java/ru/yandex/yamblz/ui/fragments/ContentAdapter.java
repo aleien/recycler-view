@@ -31,6 +31,11 @@ class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentHolder> 
     }
 
     @Override
+    public boolean onFailedToRecycleView(ContentHolder holder) {
+        return true;
+    }
+
+    @Override
     public void onBindViewHolder(ContentHolder holder, int position) {
         holder.bind(createColorForPosition(position));
         holder.setClickListener(l -> {

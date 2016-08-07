@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 
 
 class RotateGridLayoutManager extends GridLayoutManager {
@@ -32,9 +33,10 @@ class RotateGridLayoutManager extends GridLayoutManager {
 
     private void flipChild(View child) {
         if (isAnimated) {
+            child.setRotationX(0);
             child.animate()
-                    .setDuration(2000)
-                    .setStartDelay(300)
+                    .setDuration(1000)
+                    .setInterpolator(new DecelerateInterpolator())
                     .rotationX(360)
                     .start();
         }
