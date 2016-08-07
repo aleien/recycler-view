@@ -1,13 +1,11 @@
 package ru.yandex.yamblz.ui.fragments;
 
 import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -16,6 +14,7 @@ import java.util.List;
 import java.util.Random;
 
 import ru.yandex.yamblz.R;
+import ru.yandex.yamblz.ui.views.StupidSimpleTextView;
 
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
 
@@ -27,7 +26,7 @@ class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentHolder> 
 
     @Override
     public ContentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ContentHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.content_item, parent, false));
+        return new ContentHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_color, parent, false));
     }
 
     @Override
@@ -42,15 +41,12 @@ class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentHolder> 
             if (holder.getAdapterPosition() != NO_POSITION)
                 updateColorForPosition(holder.getAdapterPosition());
         });
-        holder.setIndication(holder.getAdapterPosition() == lastMovedItems.first
-                || holder.getAdapterPosition() == lastMovedItems.second);
     }
 
     @Override
     public int getItemCount() {
         return Integer.MAX_VALUE;
     }
-
 
     private Integer createColorForPosition(int position) {
         if (position >= colors.size()) {
@@ -92,7 +88,7 @@ class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentHolder> 
 
         void bind(Integer color) {
             itemView.setBackgroundColor(color);
-            ((TextView) itemView).setText("#".concat(Integer.toHexString(color).substring(2)));
+            ((StupidSimpleTextView) itemView).setText("#".concat(Integer.toHexString(color).substring(2)));
             itemView.setOnClickListener(v -> {
                 if (listener != null && listener.get() != null) {
                     listener.get().onClick(v);
@@ -104,22 +100,6 @@ class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentHolder> 
             this.listener = new WeakReference<>(listener);
         }
 
-        void setIndication(boolean wasMoved) {
-            if (wasMoved) {
-                ((TextView)itemView).setCompoundDrawablesWithIntrinsicBounds(
-                        null,
-                        null,
-                        ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_moved),
-                        null);
-            } else {
-                ((TextView)itemView).setCompoundDrawables(
-                        null,
-                        null,
-                        null,
-                        null);
-            }
-
-        }
 
     }
 }

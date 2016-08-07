@@ -69,8 +69,8 @@ public class ContentFragment extends BaseFragment {
         }
     };
 
-    private void setupOptimizations(boolean hasFixedSize, int extraLayoutSpace, int max) {
-        rv.setHasFixedSize(hasFixedSize);
+    private void setupOptimizations(boolean isOptimized, int extraLayoutSpace, int max) {
+        rv.setHasFixedSize(isOptimized);
         layoutManager.setExtraLayoutSpace(extraLayoutSpace);
         rv.getRecycledViewPool().setMaxRecycledViews(0, max);
         rv.setItemViewCacheSize(max);
