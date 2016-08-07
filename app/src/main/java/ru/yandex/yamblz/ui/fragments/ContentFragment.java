@@ -1,9 +1,6 @@
 package ru.yandex.yamblz.ui.fragments;
 
 import android.content.res.Resources;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,8 +15,6 @@ import butterknife.BindView;
 import butterknife.OnCheckedChanged;
 import ru.yandex.yamblz.R;
 
-import static ru.yandex.yamblz.utils.Utils.dpToPx;
-
 public class ContentFragment extends BaseFragment {
 
     @BindView(R.id.rv)
@@ -32,42 +27,8 @@ public class ContentFragment extends BaseFragment {
 
     private final int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
-    private final RecyclerView.ItemDecoration decoration = new RecyclerView.ItemDecoration() {
-        private final int padding = dpToPx(15);
-        private final Paint paint = new Paint();
-
-        {
-            paint.setColor(Color.WHITE);
-            paint.setStrokeWidth(dpToPx(3));
-            paint.setStyle(Paint.Style.STROKE);
-        }
-
-        @Override
-        public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
-            super.onDrawOver(c, parent, state);
-
-            for (int i = 0; i < parent.getChildCount(); i++) {
-                final View child = parent.getChildAt(i);
-                if (shouldDecorate(parent.getChildAdapterPosition(child))) continue;
-                decorateChild(c, child);
-            }
-        }
-
-        private void decorateChild(Canvas c, View child) {
-            float movementX = child.getTranslationX();
-            float movementY = child.getTranslationY();
-
-            c.drawRect(child.getLeft() + padding + movementX,
-                    child.getTop() + padding + movementY,
-                    child.getRight() - padding + movementX,
-                    child.getBottom() - padding + movementY,
-                    paint);
-        }
-
-        private boolean shouldDecorate(int position) {
-            return position % 2 == 0;
-        }
-    };
+    private final BorderItemDecoration borderDecoration = new BorderItemDecoration();
+    private final MoveItemDecoration moveItemDecoration = new MoveItemDecoration();
 
     private void setupOptimizations(boolean isOptimized, int extraLayoutSpace, int max) {
         rv.setHasFixedSize(isOptimized);
@@ -88,13 +49,14 @@ public class ContentFragment extends BaseFragment {
 
         layoutManager = new RotateGridLayoutManager(getContext(), 1);
         rv.setLayoutManager(layoutManager);
+        rv.addItemDecoration(moveItemDecoration);
 
         setupAdapter();
         setupItemTouchHelper();
     }
 
     private void setupItemTouchHelper() {
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelper(adapter);
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelper(adapter, moveItemDecoration);
         ItemTouchHelper helper = new ItemTouchHelper(callback);
         helper.attachToRecyclerView(rv);
     }
@@ -109,9 +71,9 @@ public class ContentFragment extends BaseFragment {
     @OnCheckedChanged(R.id.checkbox_decorations)
     public void onSetDecorationsChecked(boolean isDecorated) {
         if (isDecorated) {
-            rv.addItemDecoration(decoration);
+            rv.addItemDecoration(borderDecoration, 1);
         } else {
-            rv.removeItemDecoration(decoration);
+            rv.removeItemDecoration(borderDecoration);
         }
     }
 
@@ -125,7 +87,7 @@ public class ContentFragment extends BaseFragment {
         setupOptimizations(isOptimized, isOptimized ? screenHeight / 2 : -1, isOptimized ? 300 : 5);
     }
 
-    public void setSpanSlider() {
+    private void setSpanSlider() {
         spanSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {

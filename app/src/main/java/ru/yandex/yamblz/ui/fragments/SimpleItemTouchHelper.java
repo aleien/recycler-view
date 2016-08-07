@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
-import static android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_DRAG;
 import static android.support.v7.widget.helper.ItemTouchHelper.DOWN;
 import static android.support.v7.widget.helper.ItemTouchHelper.LEFT;
 import static android.support.v7.widget.helper.ItemTouchHelper.RIGHT;
@@ -15,17 +14,18 @@ import static android.support.v7.widget.helper.ItemTouchHelper.UP;
 class SimpleItemTouchHelper extends ItemTouchHelper.SimpleCallback {
     private final ContentAdapter adapter;
     private final Paint p = new Paint();
+    private final MoveItemDecoration itemDecoration;
 
-    SimpleItemTouchHelper(ContentAdapter adapter) {
+    SimpleItemTouchHelper(ContentAdapter adapter, MoveItemDecoration moveItemDecoration) {
         super(UP | DOWN | LEFT | RIGHT, RIGHT);
+        this.itemDecoration = moveItemDecoration;
         this.adapter = adapter;
     }
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
         adapter.swap(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-        // Фууууууу
-        adapter.notifyDataSetChanged();
+        itemDecoration.setLastMovedItems(viewHolder.getAdapterPosition(), target.getAdapterPosition());
         return true;
     }
 

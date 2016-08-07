@@ -16,8 +16,8 @@ import ru.yandex.yamblz.utils.Utils;
 
 public class StupidSimpleTextView extends View {
     private CharSequence text = "";
-    private Paint textPaint = new Paint();
-    int padding = Utils.dpToPx(32);
+    private final Paint textPaint = new Paint();
+    private final int padding = Utils.dpToPx(32);
 
     public StupidSimpleTextView(Context context) {
         super(context);

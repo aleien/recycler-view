@@ -6,9 +6,9 @@
     android:orientation="vertical">
 
     <TableLayout
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
 
         <TableRow
             android:layout_width="match_parent"
@@ -18,15 +18,15 @@
                 android:id="@+id/checkbox_decorations"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="Decorations"/>
+                android:padding="@dimen/padding"
+                android:text="@string/title_decorations"/>
 
             <CheckBox
                 android:id="@+id/checkbox_animations"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="Animations"/>
+                android:padding="@dimen/padding"
+                android:text="@string/title_animations"/>
         </TableRow>
 
         <TableRow
@@ -37,19 +37,18 @@
                 android:id="@+id/checkbox_optimization"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="Optimize"/>
+                android:padding="@dimen/padding"
+                android:text="@string/title_optimize"/>
 
             <SeekBar
                 android:id="@+id/span_slider"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:max="30"
-                android:padding="8dp"
+                android:padding="@dimen/padding"
                 android:progress="1"/>
 
         </TableRow>
-
     </TableLayout>
 
     <android.support.v7.widget.RecyclerView

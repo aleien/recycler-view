@@ -1,7 +1,6 @@
 package ru.yandex.yamblz.ui.fragments;
 
 import android.graphics.Color;
-import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +21,6 @@ class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentHolder> 
 
     private final Random rnd = new Random();
     private final List<Integer> colors = new ArrayList<>();
-    private Pair<Integer, Integer> lastMovedItems = new Pair<>(-1, -1);
 
     @Override
     public ContentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -69,8 +67,6 @@ class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentHolder> 
 
     void swap(int firstPosition, int secondPosition) {
         Collections.swap(colors, firstPosition, secondPosition);
-        if (firstPosition != secondPosition)
-            lastMovedItems = new Pair<>(firstPosition, secondPosition);
         notifyItemMoved(firstPosition, secondPosition);
     }
 
